@@ -61,7 +61,11 @@ public class QBean<T> extends FactoryExpressionBase<T> {
                 Operation<?> operation = (Operation<?>) expr;
                 if (operation.getOperator() == Ops.ALIAS && operation.getArg(1) instanceof Path<?>) {
                     Path<?> path = (Path<?>) operation.getArg(1);
-                    rv.put(path.getMetadata().getName(), operation.getArg(0));
+                    if (operation.getArg(0) instanceof FactoryExpression) {
+                        rv.put(path.getMetadata().getName(), operation.getArg(0));
+                    } else {
+                        rv.put(path.getMetadata().getName(), operation);
+                    }
                 } else {
                     throw new IllegalArgumentException("Unsupported expression " + expr);
                 }
